@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital FAQ Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            background-color: #BAC7BE;
+        }
+
+        h2 {
+            font-size: 50px;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: black;
+        }
+
+        #chatbox {
+            width: 1000px;
+            height: 400px;
+            border: 1px solid #ccc;
+            padding: 50px;
+            overflow-y: scroll;
+            margin: auto;
+            background-color: #E8E8E8;
+            color: #333333;
+            font-size: 23px;
+        }
+
+        #userInput {
+            width: 900px;
+            height: 30px;
+            padding: 10px;
+            margin-left: 200px;
+            background-color: #b0b7bf;
+            border: #CCCCCC;
+            color: #1A3E72;
+            font-size: 20px;
+        }
+
+        #sendBtn {
+            padding: 10px;
+            margin-left: 20px;
+            width: 90px;
+            background-color: rgb(6, 55, 25);
+            color: white;
+            hover
+        }
+
+        .user {
+            color: rgb(1, 1, 96);
+        }
+
+        .bot {
+            color: rgb(1, 52, 1);
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Hospital FAQ Chatbot</h2>
+    <div id="chatbox"></div>
+    <input type="text" id="userInput" placeholder="How can I help you today? 💬">
+    <button id="sendBtn">Send</button>
+
+    <script>
+        const chatbox = document.getElementById("chatbox");
+        const userInput = document.getElementById("userInput");
+        const sendBtn = document.getElementById("sendBtn");
+
+        // ✅ Load greeting when page opens
+        window.onload = function () {
+            fetch("/start")
+                .then(res => res.json())
+                .then(data => {
+                    chatbox.innerHTML += `<p class="bot"><b>Bot:</b> ${data.response}</p>`;
+                });
+        };
+
+        userInput.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                sendBtn.click();
+            }
+        });
+
+        sendBtn.onclick = function () {
+            const userText = userInput.value;
+            chatbox.innerHTML += `<p class="user"><b>You:</b> ${userText}</p>`;
+            fetch("/get", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ msg: userText })
+            })
+
+                .then(response => response.json())
+                .then(data => {
+                    chatbox.innerHTML += `<p class="bot"><b>Bot:</b> ${data.response}</p>`;
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                });
+            userInput.value = "";
+        };
+    </script>
+</body>
+
+</html>
