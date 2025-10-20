@@ -35,5 +35,3 @@ An intelligent **Flask-based hospital chatbot** that helps users get instant ans
 | **JSON** | Communication between frontend and backend |
 
 
-```bash
-git clone https://github.com/YourUsername/HospitalChatbot.git
